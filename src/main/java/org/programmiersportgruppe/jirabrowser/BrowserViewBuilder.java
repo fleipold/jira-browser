@@ -67,7 +67,7 @@ public class BrowserViewBuilder {
         return pane;
     }
 
-    private JScrollPane buildDetailsPanel(BrowserViewModel model) {
+    private JComponent buildDetailsPanel(BrowserViewModel model) {
         DefaultFormBuilder builder = new DefaultFormBuilder(new FormLayout("right:p, 4dlu, fill:200dlu:grow"));
         ValueModel heading = ConverterFactory.combine(model.key, model.summary, (a, b) -> {
             if (a == null || b == null)
@@ -88,7 +88,6 @@ public class BrowserViewBuilder {
         detailsBuilder.textArea(model.acceptanceCriteria, "Acceptance Criteria");
 
         builder.appendRow("fill:p:grow");
-
 
         builder.append(detailsBuilder.build(), 3);
 
