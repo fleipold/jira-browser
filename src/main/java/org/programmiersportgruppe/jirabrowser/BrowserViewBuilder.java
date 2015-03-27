@@ -5,7 +5,6 @@ import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.list.SelectionInList;
 import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.FormLayout;
@@ -68,7 +67,7 @@ public class BrowserViewBuilder {
     }
 
     private JComponent buildDetailsPanel(BrowserViewModel model) {
-        DefaultFormBuilder builder = new DefaultFormBuilder(new FormLayout("right:p, 4dlu, fill:200dlu:grow"));
+        DefaultFormBuilder builder = new DefaultFormBuilder(new FormLayout("right:p, 4dlu, fill:300dlu:grow"));
         ValueModel heading = ConverterFactory.combine(model.key, model.summary, (a, b) -> {
             if (a == null || b == null)
                 return null;
@@ -77,19 +76,20 @@ public class BrowserViewBuilder {
         });
 
         JLabel headingLabel = BasicComponentFactory.createLabel(heading);
+
         headingLabel.setHorizontalAlignment(SwingConstants.LEFT);
         JComponent separator = new DefaultComponentFactory().createSeparator(headingLabel);
         builder.append(separator,3);
 
-        DetailsBuilder detailsBuilder = new DetailsBuilder();
+        TicketViewBuilder ticketViewBuilder = new TicketViewBuilder();
 
-        detailsBuilder.textArea(model.descriptionModel, "Description");
-        detailsBuilder.textArea(model.storyModel, "Story");
-        detailsBuilder.textArea(model.acceptanceCriteria, "Acceptance Criteria");
+        ticketViewBuilder.textArea(model.descriptionModel, "Description");
+        ticketViewBuilder.textArea(model.storyModel, "Story");
+        ticketViewBuilder.textArea(model.acceptanceCriteria, "Acceptance Criteria");
 
         builder.appendRow("fill:p:grow");
 
-        builder.append(detailsBuilder.build(), 3);
+        builder.append(ticketViewBuilder.build(), 3);
 
         JScrollPane jScrollPane = new JScrollPane(builder.build());
         jScrollPane.getVerticalScrollBar().setUnitIncrement(20);
@@ -97,13 +97,17 @@ public class BrowserViewBuilder {
     }
 
     private JPanel buildTablePanel(BrowserViewModel model) {
-        DefaultFormBuilder builder = new DefaultFormBuilder(new FormLayout("right:p, 4dlu, fill:200dlu:grow"), new FormDebugPanel());
+        DefaultFormBuilder outerBuilder = new DefaultFormBuilder(new FormLayout("fill:300dlu:grow"));
+
+        DefaultFormBuilder builder = new DefaultFormBuilder(new FormLayout("right:p, 4dlu, fill:200dlu:grow"));
         JXTable table = createTable(model.ticketSelection, model.tableAdapter);
 
         builder.append("Filter", BasicComponentFactory.createTextField(model.filterQuery, false));
-        builder.appendRow("fill:400dlu:grow");
-        builder.append(new JScrollPane(table), 3);
-        return builder.build();
+
+        outerBuilder.append(builder.build());
+        outerBuilder.appendRow("fill:400dlu:grow");
+        outerBuilder.append(new JScrollPane(table));
+        return outerBuilder.build();
     }
 
 

@@ -4,7 +4,6 @@ import com.jgoodies.binding.adapter.BasicComponentFactory;
 import com.jgoodies.binding.beans.PropertyConnector;
 import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.layout.FormLayout;
 import org.programmiersportgruppe.jgoodies.misc.IsNotNullConverter;
 
@@ -14,11 +13,11 @@ import java.awt.*;
 /**
  * Created by fleipold on 26/03/2015.
  */
-public class DetailsBuilder {
+public class TicketViewBuilder {
 
     private final DefaultFormBuilder outerBuilder;
 
-    public DetailsBuilder() {
+    public TicketViewBuilder() {
 
         outerBuilder = new DefaultFormBuilder(new FormLayout("fill:200dlu:grow"));
 
@@ -36,6 +35,8 @@ public class DetailsBuilder {
         builder.appendRow("pref");
         JTextArea textArea = BasicComponentFactory.createTextArea(valueModel);
         textArea.setEditable(false);
+        textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
 

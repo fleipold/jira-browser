@@ -1,11 +1,10 @@
 package org.programmiersportgruppe.jirabrowser;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.programmiersportgruppe.swingutils.UIUtils;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
-import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
@@ -14,6 +13,8 @@ import static java.util.stream.Collectors.toList;
 public class Main {
 
     public static void main(String[] args) {
+
+        String[] availableFontFamilyNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
 
 
         TicketReader reader = new TicketReader();
@@ -33,7 +34,7 @@ public class Main {
     }
 
     public static void showInFrame(JComponent pane, String title) {
-        final JFrame frame=new JFrame(title);
+        final JFrame frame = new JFrame(title);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setContentPane(pane);
         frame.pack();

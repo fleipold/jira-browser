@@ -57,7 +57,6 @@ public class BrowserViewModel {
 
     private void filter() {
         String query = ((String) filterQuery.getValue()).toLowerCase().trim();
-        System.out.println(allTickets.size());
         List<JiraTicket> filteredTickets = allTickets
                 .stream().filter(ticket ->
                     ticket.getSummary().toLowerCase().contains(query)
@@ -67,8 +66,6 @@ public class BrowserViewModel {
 
                 .sorted((o1, o2) -> o1.getKey().compareTo(o2.getKey()))
                 .collect(toList());
-
-        System.out.println(filteredTickets.size());
         filteredTicketsHolder.setValue(filteredTickets);
     }
 
