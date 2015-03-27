@@ -14,7 +14,6 @@ import org.jdesktop.swingx.decorator.HighlighterFactory;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
-import java.awt.*;
 import java.util.List;
 import java.util.function.Function;
 
@@ -64,10 +63,8 @@ public class BrowserViewBuilder {
 
         pane.setBorder(null);
 
-        builder.add(pane);
-        builder.border(Borders.DLU4);
-        return builder.build();
-
+        pane.setBorder(Borders.DLU4);
+        return pane;
     }
 
     private JScrollPane buildDetailsPanel(BrowserViewModel model) {
@@ -82,7 +79,7 @@ public class BrowserViewBuilder {
         JLabel headingLabel = BasicComponentFactory.createLabel(heading);
         headingLabel.setHorizontalAlignment(SwingConstants.LEFT);
         JComponent separator = new DefaultComponentFactory().createSeparator(headingLabel);
-        builder.append(separator);
+        builder.append(separator,3);
 
         DetailsBuilder detailsBuilder = new DetailsBuilder();
 
