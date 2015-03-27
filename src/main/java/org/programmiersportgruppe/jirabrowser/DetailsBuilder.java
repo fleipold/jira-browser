@@ -20,14 +20,14 @@ public class DetailsBuilder {
 
     public DetailsBuilder() {
 
-        outerBuilder = new DefaultFormBuilder(new FormLayout("fill:200dlu:grow"));
+        outerBuilder = new DefaultFormBuilder(new FormLayout("fill:200dlu:"));
 
 
     }
 
     public void textArea(ValueModel valueModel, String label) {
         //builder.appendSeparator(label);
-        DefaultFormBuilder builder = new DefaultFormBuilder(new FormLayout("fill:200dlu:grow"));
+        DefaultFormBuilder builder = new DefaultFormBuilder(new FormLayout("fill:200dlu:"));
 
 
         builder.appendSeparator(label);

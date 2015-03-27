@@ -3,9 +3,11 @@ package org.programmiersportgruppe.jirabrowser;
 import com.jgoodies.binding.adapter.BasicComponentFactory;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.list.SelectionInList;
+import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.FormLayout;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
@@ -70,6 +72,17 @@ public class BrowserViewBuilder {
 
     private JScrollPane buildDetailsPanel(BrowserViewModel model) {
         DefaultFormBuilder builder = new DefaultFormBuilder(new FormLayout("right:p, 4dlu, fill:200dlu:grow"));
+        ValueModel heading = ConverterFactory.combine(model.key, model.summary, (a, b) -> {
+            if (a == null || b == null)
+                return null;
+
+            return a.toString() + ": " + b.toString();
+        });
+
+        JLabel headingLabel = BasicComponentFactory.createLabel(heading);
+        headingLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        JComponent separator = new DefaultComponentFactory().createSeparator(headingLabel);
+        builder.append(separator);
 
         DetailsBuilder detailsBuilder = new DetailsBuilder();
 

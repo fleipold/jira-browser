@@ -26,6 +26,10 @@ public class BrowserViewModel {
 
 
     private final PresentationModel<JiraTicket> details = new PresentationModel<>(selectedTicket);
+
+    public final ValueModel summary = details.getModel("summary");
+    public final ValueModel key = details.getModel("key");
+
     public final ValueModel descriptionModel = getOptionalModel("description");
     public final ValueModel storyModel = getOptionalModel("story");
     public final ValueModel acceptanceCriteria = getOptionalModel("acceptanceCriteria");
