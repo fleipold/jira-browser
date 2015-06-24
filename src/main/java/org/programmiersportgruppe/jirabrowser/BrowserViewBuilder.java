@@ -105,7 +105,8 @@ public class BrowserViewBuilder {
         DefaultFormBuilder builder = new DefaultFormBuilder(new FormLayout("right:p, 4dlu, fill:200dlu:grow"));
         JXTable table = createTable(model.ticketSelection, model.tableAdapter);
 
-        builder.append("Filter", BasicComponentFactory.createTextField(model.filterQuery, false));
+        builder.appendSeparator("Filter");
+        builder.append("Text", BasicComponentFactory.createTextField(model.filterQuery, false));
         builder.appendRow("top:p");
         builder.append("Status", createMultiCheckbox(model.statusFilter));
         builder.appendRelatedComponentsGapRow();
