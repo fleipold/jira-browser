@@ -3,8 +3,15 @@ package org.programmiersportgruppe.jirabrowser;
 
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.list.SelectionInList;
-import com.jgoodies.binding.value.*;
+import com.jgoodies.binding.value.BindingConverter;
+import com.jgoodies.binding.value.ConverterValueModel;
+import com.jgoodies.binding.value.ValueHolder;
+import com.jgoodies.binding.value.ValueModel;
+import com.jgoodies.common.collect.ArrayListModel;
+import org.programmiersportgruppe.jgoodies.listadapter.MultiSelectionInList;
 
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +43,7 @@ public class BrowserViewModel {
     public final ValueModel releaseNotes = getOptionalModel("releaseNotes");
 
 
+    public final MultiSelectionInList statusFilter;
 
     private ConverterValueModel getOptionalModel(String propertyName) {
         return new ConverterValueModel(details.getComponentModel(propertyName), new OptionalStringConverter());
@@ -48,20 +56,35 @@ public class BrowserViewModel {
     public BrowserViewModel(List<JiraTicket> tickets) {
         this.allTickets =tickets;
         this.ticketSelection = new SelectionInList<JiraTicket>(filteredTicketsHolder, selectedTicket);
-        filter();
+        statusFilter = new MultiSelectionInList(new ArrayListModel<>(allTickets.stream().map(e -> e.getStatus()).distinct().collect(toList())));
+        statusFilter.getSelection().addAll((ArrayListModel)statusFilter.getList());
 
+        filter();
         this.filterQuery.addValueChangeListener(evt -> {
             filter();
         });
+
+        statusFilter.getSelection().addListDataListener(new ListDataListener() {
+            @Override
+            public void intervalAdded(ListDataEvent e) { filter(); }
+
+            @Override
+            public void intervalRemoved(ListDataEvent e) { filter(); }
+
+            @Override
+            public void contentsChanged(ListDataEvent e) { filter(); }
+        });
+
     }
 
     private void filter() {
         String query = ((String) filterQuery.getValue()).toLowerCase().trim();
         List<JiraTicket> filteredTickets = allTickets
                 .stream().filter(ticket ->
-                    ticket.getSummary().toLowerCase().contains(query)
+                 ( ticket.getSummary().toLowerCase().contains(query)
                             || ticket.getDescription().map(String::toLowerCase).orElse("").contains(query)
-                            || ticket.getKey().toString().toLowerCase().contains(query)
+                            || ticket.getKey().toString().toLowerCase().contains(query))
+                 && statusFilter.getSelection().contains(ticket.getStatus())
                 )
 
                 .sorted((o1, o2) -> o1.getKey().compareTo(o2.getKey()))
