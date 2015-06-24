@@ -54,6 +54,10 @@ public class BrowserViewModel {
     public final SelectionInList<JiraTicket> ticketSelection;
 
     public BrowserViewModel(List<JiraTicket> tickets) {
+
+        tableAdapter.externalStringRenderer(jiraTicket ->
+            "* [" + jiraTicket.getKey() + "](" + jiraTicket.getDisplayUri() + ") : " + jiraTicket.getSummary()
+        );
         this.allTickets =tickets;
         this.ticketSelection = new SelectionInList<JiraTicket>(filteredTicketsHolder, selectedTicket);
         statusFilter = new MultiSelectionInList(new ArrayListModel<>(allTickets.stream().map(e -> e.getStatus()).distinct().collect(toList())));

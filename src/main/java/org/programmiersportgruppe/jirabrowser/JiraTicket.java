@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 import com.jgoodies.binding.beans.Model;
 
+import java.net.URI;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 public class JiraTicket extends Model  {
 
+    private final String uri;
     ISO8601DateFormat df = new ISO8601DateFormat();
 
     private final Optional<String> audience;
@@ -62,6 +64,7 @@ public class JiraTicket extends Model  {
          */
         JsonNode fields = issue.get("fields");
 
+        uri = issue.get("self").asText();
 
         JsonNode summaryNode = fields.get("summary");
         summary = summaryNode.textValue();
@@ -142,5 +145,11 @@ public class JiraTicket extends Model  {
         return updated;
     }
 
+    public String getUri() {
+        return uri;
+    }
 
+    public String getDisplayUri() {
+        return getUri().split("/")[0] + "/browse/" + getKey();
+    }
 }

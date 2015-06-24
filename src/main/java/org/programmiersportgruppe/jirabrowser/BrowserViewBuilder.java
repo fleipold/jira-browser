@@ -12,6 +12,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
 import org.programmiersportgruppe.jgoodies.listadapter.MultiSelectionInList;
+import org.programmiersportgruppe.jirabrowser.misc.TableTransferHandler;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
@@ -38,6 +39,9 @@ public class BrowserViewBuilder {
 
     public static JXTable createTable(SelectionInList selectionInList, BeanTableAdapter<?> tableAdapter) {
         JXTable table = new JXTable(tableAdapter);
+        table.setDragEnabled(true);
+
+        table.setTransferHandler(new TableTransferHandler(tableAdapter));
         Bindings.bind(table, selectionInList);
         table.setColumnControlVisible(true);
         table.setHighlighters(
@@ -106,9 +110,9 @@ public class BrowserViewBuilder {
         JXTable table = createTable(model.ticketSelection, model.tableAdapter);
 
         builder.appendSeparator("Filter");
-        builder.append("Text", BasicComponentFactory.createTextField(model.filterQuery, false));
+        builder.append("&Text", BasicComponentFactory.createTextField(model.filterQuery, false));
         builder.appendRow("top:p");
-        builder.append("Status", createMultiCheckbox(model.statusFilter));
+        builder.append("&Status", createMultiCheckbox(model.statusFilter));
         builder.appendRelatedComponentsGapRow();
 
         outerBuilder.append(builder.build());
