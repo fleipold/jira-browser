@@ -71,8 +71,8 @@ public class TableTransferHandler extends TransferHandler implements UIResource 
                 htmlBuf.append("<li>\n");
 
 
-                plainBuf.append(tableAdapter.getExternalString(row)+"\n");
-                htmlBuf.append(tableAdapter.getExternalHtmlRep(row));
+                plainBuf.append(tableAdapter.getExternalString(rows[row])+"\n");
+                htmlBuf.append(tableAdapter.getExternalHtmlRep(rows[row]));
                 // we want a newline at the end of each line and not a tab
 
                 plainBuf.deleteCharAt(plainBuf.length() - 1).append("\n");
