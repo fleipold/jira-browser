@@ -3,8 +3,10 @@ package org.programmiersportgruppe.jirabrowser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 import com.jgoodies.binding.beans.Model;
+import org.apache.http.client.utils.URIBuilder;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -150,6 +152,12 @@ public class JiraTicket extends Model  {
     }
 
     public String getDisplayUri() {
-        return getUri().split("/")[0] + "/browse/" + getKey();
+        try {
+            URIBuilder builder = new URIBuilder(uri);
+            return builder.setPath("/browse/" + getKey()).build().toString();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("this is not going well", e);
+        }
+
     }
 }

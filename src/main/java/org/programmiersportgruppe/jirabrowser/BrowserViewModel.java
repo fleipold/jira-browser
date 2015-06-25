@@ -10,8 +10,12 @@ import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.common.collect.ArrayListModel;
 import org.programmiersportgruppe.jgoodies.listadapter.MultiSelectionInList;
 
+import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +45,27 @@ public class BrowserViewModel {
     public final ValueModel storyModel = getOptionalModel("story");
     public final ValueModel acceptanceCriteria = getOptionalModel("acceptanceCriteria");
     public final ValueModel releaseNotes = getOptionalModel("releaseNotes");
+
+    public final Action openBrowserAction = new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (ticketSelection.getSelection() != null) {
+                openWebpage(URI.create(ticketSelection.getSelection().getDisplayUri()));
+            }
+        }
+    };
+
+    public static void openWebpage(URI uri) {
+        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+            try {
+                desktop.browse(uri);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 
     public final MultiSelectionInList statusFilter;

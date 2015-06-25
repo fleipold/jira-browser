@@ -12,6 +12,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
 import org.programmiersportgruppe.jgoodies.listadapter.MultiSelectionInList;
+import org.programmiersportgruppe.jirabrowser.misc.DoubleClickAdapter;
 import org.programmiersportgruppe.jirabrowser.misc.TableTransferHandler;
 
 import javax.swing.*;
@@ -108,6 +109,8 @@ public class BrowserViewBuilder {
 
         DefaultFormBuilder builder = new DefaultFormBuilder(new FormLayout("right:p, 4dlu, fill:200dlu:grow"));
         JXTable table = createTable(model.ticketSelection, model.tableAdapter);
+
+        table.addMouseListener(new DoubleClickAdapter(model.openBrowserAction));
 
         builder.appendSeparator("Filter");
         builder.append("&Text", BasicComponentFactory.createTextField(model.filterQuery, false));
