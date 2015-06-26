@@ -12,10 +12,10 @@ import static java.util.stream.Collectors.toList;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+        System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Jira Browser");
 
-        String[] availableFontFamilyNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
         TicketReader reader = new TicketReader();
         File jiraDirectory = new File("/Users/fleipold/clients/nokia/jira/PBAPI/raw");
@@ -28,10 +28,20 @@ public class Main {
 
         BrowserViewModel viewModel = new BrowserViewModel(tickets.collect(toList()));
         BrowserViewBuilder viewBuilder = new BrowserViewBuilder();
-        UIUtils.fixLnF();
+        fixLnF();
 
         showInFrame(viewBuilder.buildPanel(viewModel), "Jira Tickets");
     }
+
+    private static void fixLnF() {
+        final Object osName = System.getProperties().get("os.name");
+        if (osName.equals("Mac OS X")){
+            System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Jira Browser");
+        } else {
+            UIUtils.loadPlasticLnF();
+        }
+    }
+
 
     public static void showInFrame(JComponent pane, String title) {
         final JFrame frame = new JFrame(title);
