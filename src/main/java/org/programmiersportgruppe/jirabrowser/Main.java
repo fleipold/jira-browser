@@ -18,12 +18,13 @@ public class Main {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
         TicketReader reader = new TicketReader();
-        File jiraDirectory = new File("/Users/fleipold/clients/nokia/jira/PBAPI/raw");
+        File jiraDirectory = new File(".");
 
         Stream<JiraTicket> tickets = asList(jiraDirectory.listFiles())
                 .stream()
                 .filter(file -> file.getName().endsWith(".json") && !file.getName().equals("sync_state.json"))
-                .map(reader::readTicket);
+                .map(reader::readTicket)
+                .filter(ticket -> ticket != null);
 
 
         BrowserViewModel viewModel = new BrowserViewModel(tickets.collect(toList()));

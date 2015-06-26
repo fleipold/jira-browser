@@ -14,8 +14,8 @@ public class TicketReader {
     public JiraTicket readTicket(File file){
         try {
             return new JiraTicket(mapper.readTree(file));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            return null;
         }
     }
 }
