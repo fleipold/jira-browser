@@ -10,6 +10,7 @@ import com.jgoodies.binding.value.ValueHolder;
 import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.common.collect.ArrayListModel;
 import org.programmiersportgruppe.jgoodies.listadapter.MultiSelectionInList;
+import org.programmiersportgruppe.jirabrowser.misc.SimpleSelection;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
@@ -82,7 +83,7 @@ public class BrowserViewModel {
 
     public final ValueModel filterQuery = new ValueHolder("");
 
-    public final SelectionInList<JiraTicket> ticketSelection;
+    public final SimpleSelection<JiraTicket> ticketSelection;
 
     public BrowserViewModel(List<JiraTicket> tickets) {
 
@@ -90,7 +91,7 @@ public class BrowserViewModel {
             "* [" + jiraTicket.getKey() + "](" + jiraTicket.getDisplayUri() + ") : " + jiraTicket.getSummary()
         );
         this.allTickets =tickets;
-        this.ticketSelection = new SelectionInList<JiraTicket>(filteredTicketsHolder, selectedTicket);
+        this.ticketSelection = new SimpleSelection(filteredTicketsHolder, selectedTicket);
         statusFilter = new MultiSelectionInList(new ArrayListModel<>(allTickets.stream().map(e -> e.getStatus()).distinct().collect(toList())));
         statusFilter.getSelection().addAll((ArrayListModel)statusFilter.getList());
 

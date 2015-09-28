@@ -16,6 +16,7 @@ import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
 import org.programmiersportgruppe.jgoodies.listadapter.MultiSelectionInList;
 import org.programmiersportgruppe.jirabrowser.misc.DoubleClickAdapter;
+import org.programmiersportgruppe.jirabrowser.misc.SimpleSelection;
 import org.programmiersportgruppe.jirabrowser.misc.TableTransferHandler;
 
 import javax.swing.*;
@@ -41,11 +42,32 @@ public class BrowserViewBuilder {
         }
     }
 
-    public static<T> JXTable createTable(SelectionInList selectionInList, BeanTableAdapter<T> tableAdapter) {
+    public static<T> JXTable createTable(SimpleSelection simpleSelection, BeanTableAdapter<T> tableAdapter) {
         JXTable table = new JXTable(tableAdapter);
         table.setDragEnabled(true);
 
         table.setTransferHandler(new TableTransferHandler(tableAdapter));
+
+        SelectionInList<Object> selectionInList = new SelectionInList<>();
+
+        selectionInList.setList((List<Object>) simpleSelection.getListHolder().getValue());
+
+        simpleSelection.getListHolder().addValueChangeListener(evt ->
+            selectionInList.setList((List<Object>) simpleSelection.getListHolder().getValue())
+        );
+
+        selectionInList.getSelectionIndexHolder().addValueChangeListener(evt -> {
+                Integer rawSelectionIndex = selectionInList.getSelectionIndex();
+                if (rawSelectionIndex == -1) {
+                    simpleSelection.getSimpleSelectionHolder().setValue(null);
+                    return;
+                }
+                int newIndex = table.convertRowIndexToModel(rawSelectionIndex);
+                Object selectedValue = simpleSelection.getList().get(newIndex);
+                simpleSelection.getSimpleSelectionHolder().setValue(selectedValue);
+            }
+        );
+
         Bindings.bind(table, selectionInList);
         table.setColumnControlVisible(true);
         table.setHighlighters(
