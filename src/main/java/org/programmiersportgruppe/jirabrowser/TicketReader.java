@@ -15,6 +15,8 @@ public class TicketReader {
         try {
             return new JiraTicket(mapper.readTree(file));
         } catch (Exception e) {
+            System.err.println("Ticket " + file);
+            e.printStackTrace();
             return null;
         }
     }
