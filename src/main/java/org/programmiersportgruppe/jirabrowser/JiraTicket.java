@@ -1,7 +1,10 @@
 package org.programmiersportgruppe.jirabrowser;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 import com.jgoodies.binding.beans.Model;
 import org.apache.http.client.utils.URIBuilder;
 
@@ -10,12 +13,14 @@ import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
+
+import static java.util.stream.Collectors.toList;
 
 public class JiraTicket extends Model  {
 
     private final String uri;
+    private final String assignee;
     ISO8601DateFormat df = new ISO8601DateFormat();
 
     private final Optional<String> audience;
@@ -33,6 +38,7 @@ public class JiraTicket extends Model  {
     private String reporter;
     private Date created;
     private Date updated;
+    private final List<String> labels;
 
     public JiraTicket(JsonNode issue) {
 
@@ -92,6 +98,15 @@ public class JiraTicket extends Model  {
             throw new RuntimeException(e);
         }
 
+
+        JsonNode assigneeObject = fields.get("assignee");
+        JsonNode assigneeNameObject = assigneeObject != null ?  assigneeObject.get("name") : null;
+        assignee = assigneeNameObject != null ? assigneeNameObject.textValue() : null;
+
+        // The trouble with java are the people who use it, why can it get a stream for an iterator?
+        labels = Lists.newArrayList(fields.get("labels").iterator()).stream()
+            .map(node -> node.asText()  ).collect(toList());
+
     }
 
     public String getSummary() {
@@ -149,6 +164,14 @@ public class JiraTicket extends Model  {
 
     public String getUri() {
         return uri;
+    }
+
+    public String getAssignee() {
+        return assignee;
+    }
+
+    public List<String> getLabels() {
+        return labels;
     }
 
     public String getDisplayUri() {

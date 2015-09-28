@@ -3,8 +3,8 @@ package org.programmiersportgruppe.jirabrowser;
 import org.programmiersportgruppe.swingutils.UIUtils;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
+
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
@@ -12,7 +12,7 @@ import static java.util.stream.Collectors.toList;
 
 public class Main {
 
-    public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+    public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException, InterruptedException {
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Jira Browser");
 
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

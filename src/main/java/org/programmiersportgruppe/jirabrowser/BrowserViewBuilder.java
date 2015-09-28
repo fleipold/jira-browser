@@ -2,7 +2,10 @@ package org.programmiersportgruppe.jirabrowser;
 
 import com.jgoodies.binding.adapter.BasicComponentFactory;
 import com.jgoodies.binding.adapter.Bindings;
+import com.jgoodies.binding.beans.PropertyConnector;
 import com.jgoodies.binding.list.SelectionInList;
+import com.jgoodies.binding.value.BindingConverter;
+import com.jgoodies.binding.value.ConverterValueModel;
 import com.jgoodies.binding.value.ValueHolder;
 import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -38,7 +41,7 @@ public class BrowserViewBuilder {
         }
     }
 
-    public static JXTable createTable(SelectionInList selectionInList, BeanTableAdapter<?> tableAdapter) {
+    public static<T> JXTable createTable(SelectionInList selectionInList, BeanTableAdapter<T> tableAdapter) {
         JXTable table = new JXTable(tableAdapter);
         table.setDragEnabled(true);
 
@@ -91,6 +94,7 @@ public class BrowserViewBuilder {
 
         TicketViewBuilder ticketViewBuilder = new TicketViewBuilder();
 
+        ticketViewBuilder.textArea(model.labels, "Labels");
         ticketViewBuilder.textArea(model.descriptionModel, "Description");
         ticketViewBuilder.textArea(model.storyModel, "Story");
         ticketViewBuilder.textArea(model.acceptanceCriteria, "Acceptance Criteria");
@@ -108,6 +112,7 @@ public class BrowserViewBuilder {
         DefaultFormBuilder outerBuilder = new DefaultFormBuilder(new FormLayout("fill:300dlu:grow"));
 
         DefaultFormBuilder builder = new DefaultFormBuilder(new FormLayout("right:p, 4dlu, fill:200dlu:grow"));
+
         JXTable table = createTable(model.ticketSelection, model.tableAdapter);
 
         table.addMouseListener(new DoubleClickAdapter(model.openBrowserAction));

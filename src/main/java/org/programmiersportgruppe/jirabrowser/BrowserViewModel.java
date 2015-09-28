@@ -1,6 +1,7 @@
 package org.programmiersportgruppe.jirabrowser;
 
 
+import com.google.common.base.Joiner;
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.list.SelectionInList;
 import com.jgoodies.binding.value.BindingConverter;
@@ -19,7 +20,9 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.base.Joiner.on;
 import static java.util.stream.Collectors.toList;
+import static org.programmiersportgruppe.jirabrowser.misc.Converter.convert;
 
 
 public class BrowserViewModel {
@@ -32,6 +35,7 @@ public class BrowserViewModel {
             new BrowserViewBuilder.ColumnModel<JiraTicket, JiraKey>("Key", t -> t.getKey(), JiraKey.class, true),
             new BrowserViewBuilder.ColumnModel<JiraTicket, String>("Status", t -> t.getStatus(), String.class, true),
             new BrowserViewBuilder.ColumnModel<JiraTicket, String>("Type", t -> t.getType(), String.class, true),
+            new BrowserViewBuilder.ColumnModel<JiraTicket, String>("Assignee", t -> t.getAssignee(), String.class, true),
             new BrowserViewBuilder.ColumnModel<JiraTicket, String>("Summary", t -> t.getSummary(), String.class, false)
     );
 
@@ -45,6 +49,7 @@ public class BrowserViewModel {
     public final ValueModel storyModel = getOptionalModel("story");
     public final ValueModel acceptanceCriteria = getOptionalModel("acceptanceCriteria");
     public final ValueModel releaseNotes = getOptionalModel("releaseNotes");
+    public ValueModel labels = convert(details.getModel("labels"), list -> list == null? "":on(", ").join((List<String>)list));
 
     public final Action openBrowserAction = new AbstractAction() {
         @Override
@@ -54,6 +59,7 @@ public class BrowserViewModel {
             }
         }
     };
+    ;
 
     public static void openWebpage(URI uri) {
         Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
