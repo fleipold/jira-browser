@@ -1,10 +1,12 @@
 package org.programmiersportgruppe.jirabrowser.misc;
 
+import org.jdesktop.swingx.JXTable;
 import org.programmiersportgruppe.jirabrowser.BeanTableAdapter;
 
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import java.awt.datatransfer.Transferable;
+import java.util.function.Function;
 
 /**
  * Created by fleipold on 24/06/2015.
@@ -27,10 +29,15 @@ public class TableTransferHandler extends TransferHandler implements UIResource 
      * @return The representation of the data to be transfered.
      */
     protected Transferable createTransferable(JComponent c) {
+        Function<Integer, Integer> rowTranslator = (Integer x) -> x;
+
+        if (c instanceof JXTable) {
+            rowTranslator = (Integer viewIndex) -> ((JXTable)c).convertRowIndexToModel(viewIndex);
+        }
+
         if (c instanceof JTable) {
             JTable table = (JTable) c;
             int[] rows;
-            int[] cols;
 
             if (!table.getRowSelectionAllowed() && !table.getColumnSelectionAllowed()) {
                 return null;
@@ -47,18 +54,8 @@ public class TableTransferHandler extends TransferHandler implements UIResource 
                 rows = table.getSelectedRows();
             }
 
-            if (!table.getColumnSelectionAllowed()) {
-                int colCount = table.getColumnCount();
 
-                cols = new int[colCount];
-                for (int counter = 0; counter < colCount; counter++) {
-                    cols[counter] = counter;
-                }
-            } else {
-                cols = table.getSelectedColumns();
-            }
-
-            if (rows == null || cols == null || rows.length == 0 || cols.length == 0) {
+            if (rows == null || rows.length == 0 ) {
                 return null;
             }
 
@@ -71,8 +68,9 @@ public class TableTransferHandler extends TransferHandler implements UIResource 
                 htmlBuf.append("<li>\n");
 
 
-                plainBuf.append(tableAdapter.getExternalString(rows[row])+"\n");
-                htmlBuf.append(tableAdapter.getExternalHtmlRep(rows[row]));
+                int modelRow = rowTranslator.apply(rows[row]);
+                plainBuf.append(tableAdapter.getExternalString(modelRow)+"\n");
+                htmlBuf.append(tableAdapter.getExternalHtmlRep(modelRow));
                 // we want a newline at the end of each line and not a tab
 
                 plainBuf.deleteCharAt(plainBuf.length() - 1).append("\n");
